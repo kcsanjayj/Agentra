@@ -1,5 +1,0 @@
-uvicorn
-fastapi
-requests
-openai
-python-dotenv
