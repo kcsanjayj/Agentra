@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/agent_executor
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - agent_network
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=agent_executor
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - agent_network
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - agent_network
+
+  worker:
+    build: .
+    command: celery -A app.main worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/agent_executor
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - agent_network
+
+  beat:
+    build: .
+    command: celery -A app.main beat --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/agent_executor
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - agent_network
+
+volumes:
+  postgres_data:
+
+networks:
+  agent_network:
+    driver: bridge
