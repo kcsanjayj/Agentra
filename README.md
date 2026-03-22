@@ -385,7 +385,7 @@ Fix the performance issue
 1. **Knowledge cutoff**: Cannot access information beyond training date
 2. **No true reasoning**: Pattern matching, not genuine understanding
 3. **Context window limit**: 4K token limit affects long tasks
-4. **No tool use**: Cannot execute code or access external resources
+4. **API rate limit**: 100 requests/minute per provider
 5. **Cultural bias**: Primarily trained on English/Western content
 
 ### Failure Recovery Rate
@@ -469,12 +469,6 @@ Fix the performance issue
 
 ---
 
-## Key Achievements
-
-🤖 **Improved task success rate from ~65% → 88%** on evaluated workloads
-🔧 **Reduced error rate from ~35% → 12%** using validation layer
-📝 **Increased context retention from ~300 → 2000+ tokens**
-✅ **Successfully executed multi-step tasks with ~88% acceptable outputs**
 🏗️ **Designed agent pipeline with Query → Retrieval → Generation → Validation flow**
 
 ---
